@@ -7,6 +7,7 @@ export const Route = createFileRoute("/men")({
       eyebrow="Men"
       title="Men's Collection"
       description="T-shirts, oversized tees, hoodies, sweatshirts and custom prints — built for everyday wear."
+      shopifyQuery="tag:men"
     />
   ),
   head: () => ({
