@@ -26,6 +26,7 @@ export interface ShopifyProduct {
           title: string;
           price: { amount: string; currencyCode: string };
           availableForSale: boolean;
+          image?: { url: string; altText: string | null } | null;
           selectedOptions: Array<{ name: string; value: string }>;
         };
       }>;
@@ -76,6 +77,7 @@ export const PRODUCTS_QUERY = `
               node {
                 id title availableForSale
                 price { amount currencyCode }
+                image { url altText }
                 selectedOptions { name value }
               }
             }
@@ -98,6 +100,7 @@ export const PRODUCT_BY_HANDLE_QUERY = `
           node {
             id title availableForSale
             price { amount currencyCode }
+            image { url altText }
             selectedOptions { name value }
           }
         }
@@ -107,9 +110,43 @@ export const PRODUCT_BY_HANDLE_QUERY = `
   }
 `;
 
+export const PRODUCTS_BY_COLLECTION_QUERY = `
+  query GetProductsByCollection($handle: String!, $first: Int!) {
+    collection(handle: $handle) {
+      id
+      title
+      products(first: $first) {
+        edges {
+          node {
+            id title description handle productType tags
+            priceRange { minVariantPrice { amount currencyCode } }
+            images(first: 5) { edges { node { url altText } } }
+            variants(first: 20) {
+              edges {
+                node {
+                  id title availableForSale
+                  price { amount currencyCode }
+                  image { url altText }
+                  selectedOptions { name value }
+                }
+              }
+            }
+            options { name values }
+          }
+        }
+      }
+    }
+  }
+`;
+
 export async function fetchProducts(first = 24, query?: string): Promise<ShopifyProduct[]> {
   const data = await storefrontApiRequest(PRODUCTS_QUERY, { first, query });
   return data?.data?.products?.edges ?? [];
+}
+
+export async function fetchProductsByCollection(handle: string, first = 24): Promise<ShopifyProduct[]> {
+  const data = await storefrontApiRequest(PRODUCTS_BY_COLLECTION_QUERY, { handle, first });
+  return data?.data?.collection?.products?.edges ?? [];
 }
 
 export async function fetchProductByHandle(handle: string) {

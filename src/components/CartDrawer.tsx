@@ -69,14 +69,14 @@ export function CartDrawer() {
               <>
                 <div className="flex-1 overflow-y-auto px-6 py-4 space-y-5">
                   {items.map((item) => {
-                    const img = item.product.node.images.edges[0]?.node;
+                    const img = item.image ?? item.product.node.images.edges[0]?.node;
                     return (
                       <div key={item.variantId} className="flex gap-4">
                         <div className="w-20 h-24 bg-surface-1 rounded-md overflow-hidden flex-shrink-0">
                           {img && (
                             <img
                               src={img.url}
-                              alt={item.product.node.title}
+                              alt={img.altText ?? item.product.node.title}
                               className="w-full h-full object-cover"
                             />
                           )}

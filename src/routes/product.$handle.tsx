@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useParams } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Loader2, Heart, Truck, RotateCcw } from "lucide-react";
 import { SiteLayout } from "@/components/SiteLayout";
 import { fetchProductByHandle, formatPrice } from "@/lib/shopify";
@@ -9,6 +9,17 @@ import { useCartStore } from "@/stores/cartStore";
 export const Route = createFileRoute("/product/$handle")({
   component: ProductPage,
 });
+
+type ProductVariant = {
+  id: string;
+  title: string;
+  price: { amount: string; currencyCode: string };
+  availableForSale: boolean;
+  image?: { url: string; altText: string | null } | null;
+  selectedOptions: Array<{ name: string; value: string }>;
+};
+
+type ProductOption = { name: string; values: string[] };
 
 function ProductPage() {
   const { handle } = useParams({ from: "/product/$handle" });
@@ -22,20 +33,65 @@ function ProductPage() {
   const addItem = useCartStore((s) => s.addItem);
   const isLoadingCart = useCartStore((s) => s.isLoading);
 
-  const variants = useMemo(
-    () => product?.variants?.edges?.map((e: { node: unknown }) => e.node) ?? [],
+  const variants = useMemo<ProductVariant[]>(
+    () => product?.variants?.edges?.map((e: { node: ProductVariant }) => e.node) ?? [],
     [product]
   );
 
+  useEffect(() => {
+    const firstVariant = variants[0];
+    if (!firstVariant || Object.keys(selectedOptions).length > 0) return;
+    setSelectedOptions(
+      Object.fromEntries(firstVariant.selectedOptions.map((option) => [option.name, option.value]))
+    );
+  }, [selectedOptions, variants]);
+
   const matchedVariant = useMemo(() => {
     if (!product) return null;
-    if (Object.keys(selectedOptions).length === 0) return variants[0];
     return (
-      variants.find((v: { selectedOptions: Array<{ name: string; value: string }> }) =>
-        v.selectedOptions.every((o) => selectedOptions[o.name] === o.value)
+      variants.find((variant) =>
+        variant.selectedOptions.every((option) => selectedOptions[option.name] === option.value)
       ) ?? null
     );
   }, [product, variants, selectedOptions]);
+
+  const productOptions = useMemo<ProductOption[]>(() => {
+    if (!product) return [];
+
+    const options = new Map<string, Set<string>>();
+    for (const option of product.options ?? []) {
+      if (!options.has(option.name)) options.set(option.name, new Set());
+      option.values.forEach((value) => options.get(option.name)?.add(value));
+    }
+
+    for (const variant of variants) {
+      for (const option of variant.selectedOptions ?? []) {
+        if (!options.has(option.name)) options.set(option.name, new Set());
+        options.get(option.name)?.add(option.value);
+      }
+    }
+
+    return Array.from(options, ([name, values]) => ({
+      name,
+      values: Array.from(values).filter(Boolean),
+    })).filter(
+      (option) =>
+        option.name.toLowerCase() !== "title" ||
+        option.values.some((value) => value.toLowerCase() !== "default title")
+    );
+  }, [product, variants]);
+
+  const images: Array<{ url: string; altText: string | null }> = useMemo(
+    () => product?.images.edges.map((e: { node: { url: string; altText: string | null } }) => e.node) ?? [],
+    [product]
+  );
+
+  useEffect(() => {
+    const variantImageUrl = matchedVariant?.image?.url;
+    if (!variantImageUrl) return;
+    const imageIndex = images.findIndex((image) => image.url === variantImageUrl);
+    if (imageIndex >= 0) setActiveImage(imageIndex);
+  }, [images, matchedVariant]);
 
   if (isLoading) {
     return (
@@ -58,9 +114,6 @@ function ProductPage() {
     );
   }
 
-  const images: Array<{ url: string; altText: string | null }> =
-    product.images.edges.map((e: { node: { url: string; altText: string | null } }) => e.node);
-
   const handleAdd = async () => {
     if (!matchedVariant) return;
     await addItem({
@@ -70,7 +123,27 @@ function ProductPage() {
       price: matchedVariant.price,
       quantity: 1,
       selectedOptions: matchedVariant.selectedOptions ?? [],
+      image: matchedVariant.image ?? images[activeImage] ?? null,
     });
+  };
+
+  const handleOptionSelect = (optionName: string, value: string) => {
+    const nextOptions = { ...selectedOptions, [optionName]: value };
+    const nextVariant =
+      variants.find((variant) =>
+        variant.selectedOptions.every((option) => nextOptions[option.name] === option.value)
+      ) ??
+      variants.find((variant) =>
+        variant.selectedOptions.every(
+          (option) => nextOptions[option.name] === undefined || nextOptions[option.name] === option.value
+        )
+      );
+
+    setSelectedOptions(
+      nextVariant
+        ? Object.fromEntries(nextVariant.selectedOptions.map((option) => [option.name, option.value]))
+        : nextOptions
+    );
   };
 
   return (
@@ -127,9 +200,7 @@ function ProductPage() {
             </p>
 
             {/* Options */}
-            {product.options
-              ?.filter((o: { name: string; values: string[] }) => o.values.length > 1 || o.name.toLowerCase() !== "title")
-              .map((opt: { name: string; values: string[] }) => (
+            {productOptions.map((opt) => (
                 <div key={opt.name} className="mt-6">
                   <p className="text-[13px] font-medium text-ink-muted mb-2">{opt.name}</p>
                   <div className="flex flex-wrap gap-2">
@@ -141,9 +212,7 @@ function ProductPage() {
                       return (
                         <button
                           key={value}
-                          onClick={() =>
-                            setSelectedOptions((s) => ({ ...s, [opt.name]: value }))
-                          }
+                          onClick={() => handleOptionSelect(opt.name, value)}
                           className={`px-4 py-2 rounded-sm border text-[13px] font-medium transition-colors ${
                             selected
                               ? "bg-ink text-canvas border-ink"

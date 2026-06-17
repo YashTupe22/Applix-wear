@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Search, User, Menu, X, ChevronDown } from "lucide-react";
+import { Search, Menu, X, ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { CartDrawer } from "./CartDrawer";
 
@@ -14,10 +14,10 @@ const navGroups: NavGroup[] = [
       { to: "/men/tshirt", label: "T-Shirt" },
       { to: "/men/oversized-tshirt", label: "Oversized T-Shirt" },
       { to: "/men/hoodies", label: "Hoodies" },
-      { to: "/men/hoodies/zip", label: "— Zip Hoodie" },
-      { to: "/men/hoodies/pullover", label: "— Pullover Hoodie" },
-      { to: "/men/hoodies/acid-wash", label: "— Acid Wash Hoodie" },
-      { to: "/men/hoodies/bomber", label: "— Bomber Jacket" },
+      { to: "/men/hoodies/zip", label: "Zip Hoodie" },
+      { to: "/men/hoodies/pullover", label: "Pullover Hoodie" },
+      { to: "/men/hoodies/acid-wash", label: "Acid Wash Hoodie" },
+      { to: "/men/hoodies/bomber", label: "Bomber Jacket" },
       { to: "/men/sweatshirt", label: "Sweatshirt" },
       { to: "/men/custom-printed-tshirt", label: "Custom Printed T-Shirt" },
     ],
@@ -40,9 +40,9 @@ const navGroups: NavGroup[] = [
     label: "Accessories",
     subs: [
       { to: "/accessories/poster", label: "Posters" },
-      { to: "/accessories/poster/acrylic", label: "— Acrylic Poster" },
-      { to: "/accessories/poster/framed", label: "— Framed Poster" },
-      { to: "/accessories/poster/custom", label: "— Custom Poster" },
+      { to: "/accessories/poster/acrylic", label: "Acrylic Poster" },
+      { to: "/accessories/poster/framed", label: "Framed Poster" },
+      { to: "/accessories/poster/custom", label: "Custom Poster" },
     ],
   },
   { to: "/collections", label: "Collections" },
@@ -90,9 +90,6 @@ export function TopNav() {
         <div className="flex items-center gap-2">
           <button aria-label="Search" className="w-9 h-9 grid place-items-center rounded-md text-ink-muted hover:bg-surface-1">
             <Search className="w-[18px] h-[18px]" />
-          </button>
-          <button aria-label="Account" className="hidden sm:grid w-9 h-9 place-items-center rounded-md text-ink-muted hover:bg-surface-1">
-            <User className="w-[18px] h-[18px]" />
           </button>
           <CartDrawer />
           <button
