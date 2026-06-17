@@ -2,19 +2,38 @@ import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { ProductCard } from "@/components/ProductCard";
 import { SiteLayout } from "@/components/SiteLayout";
-import { fetchProducts } from "@/lib/shopify";
+import { fetchProducts, fetchProductsByCollection } from "@/lib/shopify";
 
 interface CategoryListProps {
   eyebrow: string;
   title: string;
   description?: string;
   shopifyQuery?: string;
+  collectionHandle?: string;
+  productType?: string;
 }
 
-export function CategoryListing({ eyebrow, title, description, shopifyQuery }: CategoryListProps) {
+export function CategoryListing({
+  eyebrow,
+  title,
+  description,
+  shopifyQuery,
+  collectionHandle,
+  productType,
+}: CategoryListProps) {
   const { data: products = [], isLoading } = useQuery({
-    queryKey: ["products", "category", shopifyQuery ?? "all"],
-    queryFn: () => fetchProducts(50, shopifyQuery),
+    queryKey: ["products", "category", collectionHandle ?? productType ?? shopifyQuery ?? "all"],
+    queryFn: async () => {
+      if (collectionHandle) return fetchProductsByCollection(collectionHandle, 50);
+
+      // Use Shopify's server-side product_type: filter when productType is provided
+      // This is more reliable and efficient than client-side filtering
+      const query = productType
+        ? `product_type:"${productType}"`
+        : shopifyQuery;
+
+      return fetchProducts(50, query);
+    },
   });
 
   return (

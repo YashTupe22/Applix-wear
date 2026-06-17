@@ -6,7 +6,7 @@ export const Route = createFileRoute("/women/oversized-tshirt")({
     <CategoryListing
       eyebrow="Women"
       title="Oversized T-Shirts"
-      shopifyQuery="tag:women AND tag:oversized-tshirt"
+      productType="Women's Oversized T-Shirt"
     />
   ),
   head: () => ({ meta: [{ title: "Women's Oversized T-Shirts — Applix Wear" }] }),

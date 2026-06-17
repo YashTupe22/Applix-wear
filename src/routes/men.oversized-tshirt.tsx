@@ -7,7 +7,7 @@ export const Route = createFileRoute("/men/oversized-tshirt")({
       eyebrow="Men"
       title="Oversized T-Shirts"
       description="Relaxed, drop-shoulder fits in heavyweight cotton."
-      shopifyQuery="tag:men AND tag:oversized-tshirt"
+      productType="Men's Oversized T-Shirt"
     />
   ),
   head: () => ({

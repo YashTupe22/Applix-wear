@@ -7,7 +7,7 @@ export const Route = createFileRoute("/men/sweatshirt")({
       eyebrow="Men"
       title="Sweatshirts"
       description="Crewneck sweatshirts in heavyweight loopback cotton."
-      shopifyQuery="tag:men AND tag:sweatshirt"
+      productType="Men's Sweatshirt"
     />
   ),
   head: () => ({ meta: [{ title: "Men's Sweatshirts — Applix Wear" }] }),

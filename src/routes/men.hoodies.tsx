@@ -28,7 +28,7 @@ export const Route = createFileRoute("/men/hoodies")({
         eyebrow="Men"
         title="Hoodies"
         description="Zip, pullover, acid wash and bomber styles."
-        shopifyQuery="tag:men AND tag:hoodie"
+        productType="Men's Hoodie"
       />
     </div>
   ),

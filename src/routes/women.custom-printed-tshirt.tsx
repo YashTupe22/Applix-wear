@@ -7,7 +7,7 @@ export const Route = createFileRoute("/women/custom-printed-tshirt")({
       eyebrow="Women"
       title="Custom Printed T-Shirts"
       description="Design your own — pick a base, upload art, preview live."
-      shopifyQuery="tag:women AND tag:custom-printed"
+      productType="Women's Custom Printed T-Shirt"
     />
   ),
   head: () => ({ meta: [{ title: "Women's Custom Printed T-Shirts — Applix Wear" }] }),
