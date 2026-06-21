@@ -61,7 +61,7 @@ function ProductPage() {
     const options = new Map<string, Set<string>>();
     for (const option of product.options ?? []) {
       if (!options.has(option.name)) options.set(option.name, new Set());
-      option.values.forEach((value) => options.get(option.name)?.add(value));
+      option.values.forEach((value: string) => options.get(option.name)?.add(value));
     }
 
     for (const variant of variants) {
@@ -77,7 +77,7 @@ function ProductPage() {
     })).filter(
       (option) =>
         option.name.toLowerCase() !== "title" ||
-        option.values.some((value) => value.toLowerCase() !== "default title")
+        option.values.some((value: string) => value.toLowerCase() !== "default title")
     );
   }, [product, variants]);
 
@@ -200,7 +200,10 @@ function ProductPage() {
             </p>
 
             {/* Options */}
-            {productOptions.map((opt) => (
+            {productOptions.map((opt) => {
+              const isColorOption = opt.name.toLowerCase() === "color" || opt.name.toLowerCase() === "colour";
+              
+              return (
                 <div key={opt.name} className="mt-6">
                   <p className="text-[13px] font-medium text-ink-muted mb-2">{opt.name}</p>
                   <div className="flex flex-wrap gap-2">
@@ -209,6 +212,23 @@ function ProductPage() {
                         (selectedOptions[opt.name] ?? matchedVariant?.selectedOptions?.find(
                           (o: { name: string }) => o.name === opt.name
                         )?.value) === value;
+                        
+                      if (isColorOption) {
+                        return (
+                          <button
+                            key={value}
+                            onClick={() => handleOptionSelect(opt.name, value)}
+                            title={value}
+                            style={{ backgroundColor: value.toLowerCase().replace(/ /g, "") }}
+                            className={`w-8 h-8 rounded-full border-2 transition-transform ${
+                              selected
+                                ? "border-ink scale-110 shadow-sm"
+                                : "border-hairline hover:scale-105"
+                            }`}
+                          />
+                        );
+                      }
+
                       return (
                         <button
                           key={value}
@@ -225,7 +245,8 @@ function ProductPage() {
                     })}
                   </div>
                 </div>
-              ))}
+              );
+            })}
 
             <div className="mt-8 flex gap-3">
               <button

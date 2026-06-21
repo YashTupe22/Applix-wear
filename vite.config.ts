@@ -11,7 +11,6 @@ export default defineConfig({
       "@": "/src",
     },
     dedupe: ["react", "react-dom", "@tanstack/react-router"],
-    tsconfigPaths: true,
   },
   plugins: [
     tanstackStart({

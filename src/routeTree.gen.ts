@@ -10,8 +10,10 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WomenRouteImport } from './routes/women'
+import { Route as TermsAndConditionsRouteImport } from './routes/terms-and-conditions'
 import { Route as ShippingRouteImport } from './routes/shipping'
 import { Route as ReturnsRouteImport } from './routes/returns'
+import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
 import { Route as OurStoryRouteImport } from './routes/our-story'
 import { Route as MenRouteImport } from './routes/men'
 import { Route as FaqsRouteImport } from './routes/faqs'
@@ -46,6 +48,11 @@ const WomenRoute = WomenRouteImport.update({
   path: '/women',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TermsAndConditionsRoute = TermsAndConditionsRouteImport.update({
+  id: '/terms-and-conditions',
+  path: '/terms-and-conditions',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ShippingRoute = ShippingRouteImport.update({
   id: '/shipping',
   path: '/shipping',
@@ -54,6 +61,11 @@ const ShippingRoute = ShippingRouteImport.update({
 const ReturnsRoute = ReturnsRouteImport.update({
   id: '/returns',
   path: '/returns',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyPolicyRoute = PrivacyPolicyRouteImport.update({
+  id: '/privacy-policy',
+  path: '/privacy-policy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OurStoryRoute = OurStoryRouteImport.update({
@@ -207,8 +219,10 @@ export interface FileRoutesByFullPath {
   '/faqs': typeof FaqsRoute
   '/men': typeof MenRouteWithChildren
   '/our-story': typeof OurStoryRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
   '/returns': typeof ReturnsRoute
   '/shipping': typeof ShippingRoute
+  '/terms-and-conditions': typeof TermsAndConditionsRoute
   '/women': typeof WomenRouteWithChildren
   '/accessories/poster': typeof AccessoriesPosterRouteWithChildren
   '/men/custom-printed-tshirt': typeof MenCustomPrintedTshirtRoute
@@ -240,8 +254,10 @@ export interface FileRoutesByTo {
   '/faqs': typeof FaqsRoute
   '/men': typeof MenRouteWithChildren
   '/our-story': typeof OurStoryRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
   '/returns': typeof ReturnsRoute
   '/shipping': typeof ShippingRoute
+  '/terms-and-conditions': typeof TermsAndConditionsRoute
   '/women': typeof WomenRouteWithChildren
   '/accessories/poster': typeof AccessoriesPosterRouteWithChildren
   '/men/custom-printed-tshirt': typeof MenCustomPrintedTshirtRoute
@@ -274,8 +290,10 @@ export interface FileRoutesById {
   '/faqs': typeof FaqsRoute
   '/men': typeof MenRouteWithChildren
   '/our-story': typeof OurStoryRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
   '/returns': typeof ReturnsRoute
   '/shipping': typeof ShippingRoute
+  '/terms-and-conditions': typeof TermsAndConditionsRoute
   '/women': typeof WomenRouteWithChildren
   '/accessories/poster': typeof AccessoriesPosterRouteWithChildren
   '/men/custom-printed-tshirt': typeof MenCustomPrintedTshirtRoute
@@ -309,8 +327,10 @@ export interface FileRouteTypes {
     | '/faqs'
     | '/men'
     | '/our-story'
+    | '/privacy-policy'
     | '/returns'
     | '/shipping'
+    | '/terms-and-conditions'
     | '/women'
     | '/accessories/poster'
     | '/men/custom-printed-tshirt'
@@ -342,8 +362,10 @@ export interface FileRouteTypes {
     | '/faqs'
     | '/men'
     | '/our-story'
+    | '/privacy-policy'
     | '/returns'
     | '/shipping'
+    | '/terms-and-conditions'
     | '/women'
     | '/accessories/poster'
     | '/men/custom-printed-tshirt'
@@ -375,8 +397,10 @@ export interface FileRouteTypes {
     | '/faqs'
     | '/men'
     | '/our-story'
+    | '/privacy-policy'
     | '/returns'
     | '/shipping'
+    | '/terms-and-conditions'
     | '/women'
     | '/accessories/poster'
     | '/men/custom-printed-tshirt'
@@ -409,8 +433,10 @@ export interface RootRouteChildren {
   FaqsRoute: typeof FaqsRoute
   MenRoute: typeof MenRouteWithChildren
   OurStoryRoute: typeof OurStoryRoute
+  PrivacyPolicyRoute: typeof PrivacyPolicyRoute
   ReturnsRoute: typeof ReturnsRoute
   ShippingRoute: typeof ShippingRoute
+  TermsAndConditionsRoute: typeof TermsAndConditionsRoute
   WomenRoute: typeof WomenRouteWithChildren
   ProductHandleRoute: typeof ProductHandleRoute
 }
@@ -422,6 +448,13 @@ declare module '@tanstack/react-router' {
       path: '/women'
       fullPath: '/women'
       preLoaderRoute: typeof WomenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/terms-and-conditions': {
+      id: '/terms-and-conditions'
+      path: '/terms-and-conditions'
+      fullPath: '/terms-and-conditions'
+      preLoaderRoute: typeof TermsAndConditionsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/shipping': {
@@ -436,6 +469,13 @@ declare module '@tanstack/react-router' {
       path: '/returns'
       fullPath: '/returns'
       preLoaderRoute: typeof ReturnsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy-policy': {
+      id: '/privacy-policy'
+      path: '/privacy-policy'
+      fullPath: '/privacy-policy'
+      preLoaderRoute: typeof PrivacyPolicyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/our-story': {
@@ -730,8 +770,10 @@ const rootRouteChildren: RootRouteChildren = {
   FaqsRoute: FaqsRoute,
   MenRoute: MenRouteWithChildren,
   OurStoryRoute: OurStoryRoute,
+  PrivacyPolicyRoute: PrivacyPolicyRoute,
   ReturnsRoute: ReturnsRoute,
   ShippingRoute: ShippingRoute,
+  TermsAndConditionsRoute: TermsAndConditionsRoute,
   WomenRoute: WomenRouteWithChildren,
   ProductHandleRoute: ProductHandleRoute,
 }

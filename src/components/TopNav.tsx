@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Search, Menu, X, ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { CartDrawer } from "./CartDrawer";
+import { SearchCommand } from "./SearchCommand";
 
 type SubLink = { to: string; label: string };
 type NavGroup = { to: string; label: string; subs?: SubLink[] };
@@ -88,9 +89,7 @@ export function TopNav() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <button aria-label="Search" className="w-9 h-9 grid place-items-center rounded-md text-ink-muted hover:bg-surface-1">
-            <Search className="w-[18px] h-[18px]" />
-          </button>
+          <SearchCommand />
           <CartDrawer />
           <button
             aria-label="Menu"

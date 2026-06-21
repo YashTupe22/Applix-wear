@@ -20,6 +20,8 @@ export function SiteFooter() {
               <li><Link to="/faqs" className="hover:text-ink">FAQs</Link></li>
               <li><Link to="/shipping" className="hover:text-ink">Shipping</Link></li>
               <li><Link to="/returns" className="hover:text-ink">Returns</Link></li>
+              <li><Link to="/privacy-policy" className="hover:text-ink">Privacy Policy</Link></li>
+              <li><Link to="/terms-and-conditions" className="hover:text-ink">Terms & Conditions</Link></li>
             </ul>
           </div>
           <div>
